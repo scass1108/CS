@@ -1,0 +1,6 @@
+10 10 10 10 10 <- Direct Mapped Caches
+10 10 10 10    <- Set Associative Caches
+10             <- Fully Associative Cache (LRU replacement)
+10             <- Fully Associative Cache (Random replacement)
+10 10 10 10    <- Set Associative With No Alloc On Write Miss
+               <- Everything after a -> is here purely for explaination.

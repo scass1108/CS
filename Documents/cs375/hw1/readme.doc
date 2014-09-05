@@ -1,0 +1,8 @@
+﻿Shawn Casserly
+CS 375
+Assignment 1 
+
+
+	For the program I sorted the list using the c++ library's sort method then used a double for loop to go through the keys and subtracted one from the other and used an absolute value on the difference then used a binary search to see if the difference of the 2 keys was in the list.
+
+	The worst case time complexity of the program is n^2 because if none of the key's differences is in the list then I still had to compute the differences of all the keys in the list. 
