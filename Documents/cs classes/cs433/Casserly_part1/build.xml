@@ -1,0 +1,71 @@
+<project name="Casserly_part2" default="compile" basedir=".">
+
+  <property name="build.compiler"              value="modern"/>
+  <property name="src"                  value="src"/>
+  <property name="BUILD"                value="build"/>
+  <property name="classes"              value="${BUILD}/classes"/>
+
+
+  <target name="compile"
+          depends="Casserly_part2"/>
+
+  <target name="clean">
+       <delete dir="${BUILD}"/>
+	   <delete>
+		<fileset dir="." includes ="**/*~" defaultexcludes="no"/>
+	   </delete>
+  </target>
+
+  <!-- Prepare target directories -->
+  <target name="prepare">
+        <mkdir dir="${BUILD}"/>
+        <mkdir dir="${classes}"/>
+  </target>
+
+
+  <!-- ** means all subdirectories as well -->
+  <!-- * means all files in the current directory -->
+  <!-- for just java files use *.java -->
+
+  <target name="Casserly_part2" depends="prepare">
+    <javac srcdir="${src}"
+    	   includeantruntime = "false"
+           includes="Casserly_part2/**"
+           excludes="**/package.html"
+           destdir="${classes}"
+           classpath="${classes}"
+           debug="on"
+           optimize="on"
+           deprecation="off"/>
+  </target>
+
+ <target name="jar">
+        <mkdir dir="${BUILD}/jar"/>
+        <jar destfile="${BUILD}/jar/Casserly_part2.jar" basedir="${BUILD}/classes">
+            <manifest>
+                <attribute name="Main-Class" value="Casserly_part2.driver.Driver"/>
+            </manifest>
+        </jar>
+    </target>
+
+
+<target name="run" depends="jar">
+        <java jar="${BUILD}/jar/Casserly_part2.jar"  fork="true">
+          <arg value="200_title.txt"/>
+          <arg value="dictionary.txt"/>
+          <arg value="postings.txt"/>
+	 </java>
+    </target>
+
+<target name="archive" >
+    <mkdir dir="${BUILD}/dist"/>   
+    <tar destfile="${BUILD}/dist/Casserly_Casserly_part2.tar" basedir="${src}"/>
+    <gzip src="${BUILD}/dist/Casserly_Casserly_part2.tar" destfile="${BUILD}/dist/Casserly_Casserly_part2.tar.gz"/> 
+</target>
+
+  <!-- Generate javadocs for current project into ${doc.dir} -->
+  <target name="doc" depends="jar">
+    <javadoc sourcepath="${src}" destdir="${javadocs}"/>
+  </target>
+
+</project>

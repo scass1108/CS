@@ -1,0 +1,210 @@
+CS471 - Programming Language
+Section: 01
+Assignment #6 due: 3/11/2014
+Author: Casserly, Shawn
+Date: 3/11/2014
+
+1. Page 163 exercise 3.1
+Indicate the binding time (when the language is designed,when the program
+is linked, when the program begins execution, etc.) for each of the following
+decisions in your favorite programming language and implementation.
+Explain any answers you think are open to interpretation.
+The number of built-in functions (math, type queries, etc.)
+The variable declaration that corresponds to a particular variable reference
+(use)The maximum length allowed for a constant (literal) character string
+The referencing environment for a subroutine that is passed as a
+parameter
+The address of a particular library routine
+The total amount of space occupied by program code and data
+
+	Ruby
+	- Number of built-in functions: when the language is designed.
+	- Variable declaration that corresponds to a particular variable reference: runtime.
+	- Max. length for a constant string: there is no such concept.
+	- Referencing env. for a subroutine that is passed as a parameter: runtime.
+	- Address of a particular library routine: runtime.
+	- Total amount of space occupied by a program code and data: runtime (since it can vary based on interpreter and garbage collector).
+
+2.
+a)Draw the activation record for gcdR().   Field's offset should be consistent with the assembly code.
+
+	4 i argument
+	8 j argument
+	12 return address
+	
+b)Which way does the program stack grow? (i.e. towards higher addresses or lower addresses?)
+
+	the program grows to lower addresses
+	
+c)Annotate the gcdR.s file.  Indicate all the instruction that read, write, "create" or "delete" the stack memory.  
+Name the fields affected by instruction.
+
+		.file   "gcdR.c"
+		.text
+		.globl  gcdR
+		.type   gcdR, @function
+	gcdR:
+	.LFB0:
+		.cfi_startproc
+		pushq   %rbp
+		.cfi_def_cfa_offset 16
+		.cfi_offset 6, -16
+		movq    %rsp, %rbp
+		.cfi_def_cfa_register 6
+		subq    $16, %rsp
+		movl    %edi, -4(%rbp)		# push first parameter i
+		movl    %esi, -8(%rbp)		# push second paramenter j
+		cmpl    $0, -8(%rbp)		# compare 0 with j
+		jne     .L2			# jump if not equal
+		movl    -4(%rbp), %eax		# return i by moving it to eax
+		jmp     .L3
+	.L2:
+		movl    -4(%rbp), %eax		# move i into eax
+		movl    %eax, %edx		# move i into edx
+		sarl    $31, %edx		# bit shift i
+		idivl   -8(%rbp)		# divide i by j
+		movl    -8(%rbp), %eax		# put the remainder into eax
+		movl    %edx, %esi		# move j into esi
+		movl    %eax, %edi		# move the remainder (eax) into edi
+		call    gcdR			# call the gcdR again
+	.L3:
+		leave
+		.cfi_def_cfa 7, 8
+		ret
+		.cfi_endproc
+	.LFE0:
+		.size   gcdR, .-gcdR
+		.ident  "GCC: (Debian 4.7.2-5) 4.7.2"
+		.section        .note.GNU-stack,"",@progbits
+
+
+3.Compare the assembly file created using optimization switch with the file created without optimization(above #2).  Pay attention to how gcd's recursion is "implemented".  How are they different?
+
+	They're different since they use less registers and the optimizations turns the recursion into a loop
+
+4.
+a)
+	There are rounding errors in the floats so when we are dividing we get a non-precise number so when they are
+	added together there is a different answer than what is expected
+
+b)
+	The value stored on the computer is not exactly .1 since the number is stored in binary so when the .1 is summed 
+	10 times, the rounding error becomes significant enough to have an effect on the expected answer resulting in 
+	the program saying false.
+
+c)
+	The speed should be higher since there is no conversion before every operation,
+	the accuracy should be lower since doubles can go out more decimal places than a float,
+	and the space should be lower since floats take up less space than doubles
+	
+
+5.Many storage-management algorithms maintain a list of free blocks. 
+Here are two different algorithms, first fit and best fit, used to
+search this list and return a block of the appropriate size. 
+Which strategy, if either, will result in lower external fragmentation? 
+What does external fragmentation depend on?
+
+	Both strategies still cause fragmentation. Best fit can result in having many small blocks that are too small to be used for anything. 
+	First fit can result in too large of a block for a needed memory which might be bad use of free space. External fragmentation depends
+	on the allocation of memory on the blocks, including the grow and free of each block.
+
+6.What is the complexity of using first fit algorithm to allocate blocks?  Briefly explain an algorithm to speed up the allocation. What is the complexity of this modification?
+
+	The complexity of first fit algorithm is O(nlog(n)). It can be made more effective by first sorting the list of elements into decreasing order.
+	The new complexity is still O(nlog(n)) but i think the average case is faster.
+
+
+7. 
+a) Explain the distinction between the lifetime of a name-to-object binding and
+its visibility.
+
+	Lifetime is the time between it being created and destroyed,
+	Visibility is when it can be accessed
+
+b) What do we mean by the scope of a name-to-object binding?
+
+	The area of the code where the binding is visible	
+	
+c) Give three concrete examples drawn from programming languages with
+which you are familiar in which a variable is live but not in scope.
+
+	
+	class Class()
+	{
+	int number = 1;
+	}
+	Class awesome = new Class(); 	// number is not in scope and live
+
+	void function()
+	{
+	static int number = 1; 		// number is not in scope and live
+	}
+
+	for (int i=0; i<size; i++)
+	{
+	cout << i << end; 		// i is not in scope and live
+	}
+
+
+
+8.
+a)
+	Brad's program is crashing because his reverse method is calling insert so 
+	he keeps allocating more memory and he eventually runs out and his program 
+	crashes since he doesnt deallocate the memory anywhere
+b)
+	he is freeing the data that the points to so there can be anything in those
+	memory addresses which is why hes not getting the correct output	
+
+	
+
+9. What are two principal tradeoff between reference
+counts and tracing strategy used in garbage collecting?
+
+	An advantage of reference count over tracing is that objects are reclaimed as soon as they can no longer be referenced.
+	However, tracing wins in efficiency since reference count has frequent updates, and tracing is done continually. 
+	Also reference count required every memory managed object to reserve space for a reference count so if the program 
+	is big it may take up a lot of memory while it is trying to do garbage collection
+
+
+
+10. For each of the following individuals write 2 or 3 sentences
+describing their contribution to Programming Languages/Software
+development or Computer Science in general.  Also include a non-cs
+fact you found interesting about the person and
+any links(or references) you found useful.
+
+    Grace Hopper - 	Developed the grist compiler for a computer programming language. 
+    			Conceptualized the idea of machine-independent programming language, 
+    			which led to the development of COBOL. She popularized the term 
+    			debugging for finding a moth in a computer. She has a naval ship named
+    			after her.
+
+    Augusta Ada King - 	Considered the world's first computer programmer, she designed the first algorithm 
+    			intended to be processed by a machine. She described an algorithm for the analytical engine
+    			(Babbage's machine) to compute Bernoulli numbers. The computer language Ada, was named after Lovelace.
+
+    Barbara Liskov - 	One of the first women in the United States to be awarded a Ph. D. from a computer science department. 
+    			She developed a computer program to play chess end games. She developed a particular definition 
+    			of subtyping, known as the Liskov substitution principle. Got the 2008 Turing Award. 
+
+    Jeri Ellsworth - 	Self taught computer engineer, studied circuit design at Walla Walla College in Washington, started own
+    			conputer assembly buissiness, worked at Valve gaming corporation for 1 year, started her own virtual reality
+    			company with funding from Kickstarter.
+    
+    
+    Elaine Weyuker (bonus if you can figure out her Undergraduate Degree) -
+    			Software engineer and AT&T fellow at Bell Labs, author of 130 papers, Ph.D in CS from Rutgers, 
+    			undergrad degree was Mathematics from SUNY Binghamton, Researched software metrics and testing. 
+    
+    Nancy Lynch - 	Professor at MIT whose research is based on Distributed algorithms, real time computing and wireless network algorithms
+    			Author of a graduate textbook titled "Distributed Algorithms"
+    
+    Clarence Ellis - 	Researcher at Xerox's Palo Alto Labs, helped develop icon based Gui which was the basis for Apple and Microsofts 
+    			operating systems. Also has worked at IBM and Bell Labs, has letured at MIT and Stanford and 
+    			is a professor at University of Colorado at Boulder
+    			
+    Frances E. Allen - 	Frances E. Allen was one of the forerunners of the idea of program analysis and optimization during compilation. 
+    			Much of the optimizations in modern compilers owe themselves to her research. She was the first woman to become an IBM fellow
+    			as well as the first woman to win the Turing Award.
+

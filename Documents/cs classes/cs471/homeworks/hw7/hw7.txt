@@ -1,0 +1,162 @@
+CS471 - Programming Language
+Section: 01
+Assignment #7 due: 3/19/2014
+Author: Casserly, Shawn
+Date: 3/19/2014
+
+references 1,2,3,4,5 github.com/alejandromaka
+
+
+1.Page 168 exercise 3.14
+	Static Scoping Output:
+	1 (from print_x in procedure first)
+	1 (from print_X in main program)
+	2 (from print_X in procedure second)
+	2 (from print_X in main program)
+
+	Dynamic Scoping Output:
+	1 (from print_x in procedure first)
+	1 (from print_X in main program)
+	2 (from print_X in procedure second)
+	1 (from print_X in main program)
+
+First is called which sets x to 1. Since static scoping rules, the attempt to set x to 1 
+will resolve to the closest declaration the global x. The call to print_x in first 
+will also do the same, hence the global x will be set to 1 and then output. The 
+print_X in the main program will work the same way, always resolving to the global x variable. 
+The procedure second works in similar fashion, except it first declares a local variable named x. 
+Under static scoping, this will not matter though, and the call to print_x will still resolve to the global x.
+
+Everything up to the first print_X call from the main program, will all resolve 
+to the global x, since it is the only one declared so far. 
+When second is called, the local variable x in second will end up 
+being set to 2, and then the print_X call from inside second will resolve 
+to that local variable. When second returns though, the local x will no 
+longer be bound and so the final print_X call will resolve to the global variable x.
+
+
+2.Consider the following pseudo code:
+       x : integer := 4
+       y : integer := 50
+       procedure add()
+             x := x + y
+       procedure second(P : procedure)
+             x : integer := 1
+             P()
+       procedure first()
+             y : integer := 3
+             second(add)
+
+       first()
+       write integer(x)
+
+a)What does this program print if the language uses static scoping?
+	
+	the program prints 54	
+
+b)Explain why 7 is printed out if the language uses dynamic scoping with deep binding.
+
+	7 is printed out because with dynamic scoping the most current active binding is chosen, 
+	and deep binding means that the subroutine parameter's referencing environment 
+	is the one that is active when the parameter is being passed, which means that at that time y = 3 not 50.
+
+
+c)Explain why 4 is printed out if the language uses dynamic scoping with shallow binding.
+
+	4 is printed out because with dynamic scoping the current active binding definitions are chosen, 
+	and with shallow binding the references passed as parameters are determined when the 
+	subroutine add is used. So when add is used, x = 1 and y = 3
+
+
+
+
+3.Page 721 exercise 13.11 (perl program)
+
+4.Compile and run in gcc  the following C code on two different architecture (if possible):
+
+        void loop() {
+            int x[512];
+            int i=0;
+            while (i++ <512) {
+                x[i] = 0;
+            }
+        }
+        int main () {
+            printf("\nCalling loop -->>\n");
+            loop();
+        }
+
+    Below are the commands to compile and run the above code on Intel:
+    Below are the commands to compile and run the above code on Linux :
+        gcc -std=iso9899:1999 hw7.c -o hw7.exe
+        hw7.exe
+
+        if hw7.exe does NOT work then type:
+        ./hw7.exe  
+   Using the -S option look at the assembly code.  Do not use a debugger.
+            What happens when you run this code?
+            Depending on the target machine and the compiler, this code will execute differently.  Sometimes this code goes into an infinite loop, sometimes this code terminates, sometimes this code cause a segmentation error.  Can you explain why this code does not behavior consistently?  Think in terms of the AR and the runtime stack.
+
+
+5.The language C distinguishes between the declaration and definition.
+        A) What is the difference between declaration and definition?
+        B) Assume these statements are all outside of functions. Which of the following are declarations only and which are definitions:
+            char * a ;
+            struct S ;
+            static int hum;
+            typedef  int * string;
+            node * struct S;
+            extern double x;
+
+6.Page 169 exercise 3.15
+
+7.Page 279 exercise 6.1
+
+8.Page 280 exercise 6.5
+
+9.Why is &(&z) not legal in C?
+
+10.Evaluate following program fragment in C:
+
+    int a = 0;      
+    int b = (a++ || ++a) >= (a++ && ++a);
+    printf( "%d %d", a, b );
+
+11.In the table below show each evaluation step and 
+include the value of x and n.  Finally, display the output. 
+Remember in Java, C and C++, && is a short circuit operator 
+which is always evaluated left to right. Assume that a[n] is 
+“evaluated” by determining its l-value and has the same precedence
+as the postfix '++' and '--' operators. The '++' and '--' operators
+have higher precedence than '+' . The '+', additive operator, has 
+higher precedence than '&&'.  The '=' operator has lowest precedence.
+Assume all side effects occur immediately.
+
+    a. Assume that, wherever there is an option, operands are evaluated left to right:
+
+    int b = (a++ || ++a) >= (a++ && ++a);	a=0  b=?            
+    
+      	 
+      	 
+      	 
+      	 
+      	 
+      	 
+      	 
+
+
+    b. Assume that, wherever there is an option, operands are evaluated right to left:
+
+
+    int b = (a++ || ++a) >= (a++ && ++a);	a=0  b=?             
+      	 
+      	 
+      	 
+      	 
+      	 
+      	 
+      	 
+      	 
+
+
+

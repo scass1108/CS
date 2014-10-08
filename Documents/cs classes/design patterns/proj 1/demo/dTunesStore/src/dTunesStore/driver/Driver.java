@@ -1,0 +1,66 @@
+/** Driver code to create instances of all the classes such as 
+* MusicStore, PopulateWorker, and SearchWorker
+*/
+package dTunesStore.driver;
+
+import dTunesStore.util.Debug;
+import dTunesStore.util.Results;
+import dTunesStore.dataStore.FileReaderHelper;
+import dTunesStore.dataStore.PopulateWorker;
+import dTunesStore.dataStore.SearchWorker;
+import dTunesStore.dataStore.MusicStore;
+import java.util.Vector;
+public class Driver 
+{
+
+    public static void main(String args[]) 
+    {
+
+		  String dataFile = "";
+		  int NN = 0;
+		  String searchFileName = "";
+		  int MM = 0;
+		  String DEBUG_VALUE = "";
+
+		  try{
+			  dataFile = args[0];
+			  NN = Integer.parseInt(args[1]);
+			  searchFileName = args[2];
+			  MM = Integer.parseInt(args[3]);
+			  Debug.setDebug(Integer.parseInt(args[4]));
+			  if(NN < 0 || NN > 5 || MM < 0 || MM > 5){
+					System.out.println("Threads have to be between 1 and 5 inclusive");
+		            return;			
+			  }
+			  else if(Debug.getDebug() < 0 || Debug.getDebug() > 4 ){
+					System.out.println("Debug value has to be between 0 and 4 inclusive");
+		            return;
+			  }
+		  }
+		  catch(Exception e){
+			  if(e instanceof ArrayIndexOutOfBoundsException){
+			  		System.out.println("5 Arguments are required");
+		            return;
+			  }
+		      else{
+					System.out.println("Exception thrown:" + e);
+		            return;
+		      }
+		  }
+
+
+		FileReaderHelper frh1 = new FileReaderHelper(dataFile);
+		PopulateWorker pw = new PopulateWorker(NN, frh1);
+		pw.startThreads();
+		MusicStore ms = new MusicStore();
+		ms = pw.getMusicStore();
+		FileReaderHelper frh2 = new FileReaderHelper(searchFileName);
+		Results r = new Results();
+		SearchWorker sw = new SearchWorker(MM, ms, frh2, r);
+		sw.startThreads();
+		r = sw.getResults();
+		if(Debug.getDebug() == 1){
+			r.printResults();
+		}
+    } // end main(...)
+} // end class Driver

@@ -1,0 +1,31 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <iostream>
+#include <netdb.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <math.h>
+#include <pthread.h>
+
+using namespace std;
+int main(int argc, char* argv[])
+{
+
+
+}
+/*
+2 udp ports 1 for bulk, 1 for individ
+400 initial inventory
+
+wait 50 ms for indivd orders
+wait 100 for bulk
+after wait, send ack to buyer
+
+if request > inventory, need to order more cases
+cases cost 5 and take 5s to del
+
+*/

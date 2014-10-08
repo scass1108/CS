@@ -1,0 +1,130 @@
+package dTunesStore.dataStore;
+
+import dTunesStore.util.Debug;
+import dTunesStore.util.Results;
+import java.util.Vector;
+import java.lang.Thread;
+import java.lang.InterruptedException;
+/**
+*This class uses multiple threads to take data about songs from a file and uses the threads to put
+*them in an object that is later used to see if we can find matches with another data file's entires
+*/
+
+public class PopulateWorker implements Runnable 
+{
+	int threadsToMake;	
+	MusicStore ms = new MusicStore();
+	FileReaderHelper frh;
+/**
+*this is the constructor that is used to create the initial object in the driver class
+*it contains the number of threads that are going to be created in this class as well
+*as a reference to a helper class to read from a file that i made as well as a reference
+*to the MusicStore class that will be passed to the threads that are created
+*@param  threadsToMake   the number of threads this class will make
+*@param  frh             a file helper reference that opens the file that this class will be reading from
+*/	
+    public PopulateWorker(int threadsToMake, FileReaderHelper frh)
+    {
+    	this.threadsToMake = threadsToMake;
+    	this.frh = frh;
+    	this.ms = ms;
+    }
+/**
+*this is the constructor that is called when i make the threads in this class
+*it contains the MusicStore class reference from the original instance of this class
+*as well as the reference to the helper class for reading the file the data is being
+*taken in from 
+*@param  ms    an instance of the MusicStore class that will be shared among the created threads
+*@param  frh   a file helper so that all threads will read from the same file
+*/    
+    public PopulateWorker(MusicStore ms, FileReaderHelper frh)
+    {
+    	this.ms = ms;
+    	this.frh = frh;
+    }
+    
+/**
+*this method creates the threads that will be populating the data structure we created to hold
+*the music information from the file. It calls the second constructor and creates the threads based
+*on the value passed in from the first constructor
+*/
+    public void startThreads()
+    { 
+    	Thread t = null;
+    	PopulateWorker pw;
+
+    	for(int i = 0; i < threadsToMake; i++)
+	{
+		pw = new PopulateWorker(ms, frh);		
+		t = new Thread(pw);
+		t.start();
+	}
+	for(int i = 0; i < threadsToMake; i++)
+	{
+		try
+		{
+			t.join();
+		}
+		catch(InterruptedException ie)
+		{
+			System.out.println("things went wrong");
+			System.exit(1);
+		}
+    	}
+    }
+/**
+*the threads grab the next line in the data file from a synchonized method in FileReaderHelper.java
+*this assumes that the data in the file is ideal and then passes the line it grabbed into another method
+*for processing
+*@see FileReaderHelper.java
+*/    
+    public void run() 
+    {    	
+    	String s;
+    	while((s = frh.read()) != null)
+    	{
+    		putInMusicStore(ms, s);
+    		
+    	}    	
+    } 
+/**
+*puts the string into the data structure in MusicStore after i send it to be processed in the processString method
+*@param ms   the MusicStore reference that all the threads have so that they operate on the same instance
+*@param s    the string that was grabbed from the file from FileReaderHelper
+*/
+    public synchronized void putInMusicStore(MusicStore ms, String s)
+    {
+    	MusicInfo mi = processString(s);
+    
+    	ms.addMusicInfo(mi.getSong(), mi);
+    	ms.addMusicInfo(mi.getAlbum(), mi);
+    	ms.addMusicInfo(mi.getSinger(), mi);
+    }//end putInMusicStore(...)     
+/**
+*processes string into its components by splitting it up based on spaces between values and creates
+*a MusicInfo object out of them
+*@param s    string that was grabbed from file
+*@see MusicInfo.java
+*/
+    public synchronized MusicInfo processString(String s)
+    {
+    	String delims = "[ ]+";
+    	String[]tokens = s.split(delims);
+    	MusicInfo m = new MusicInfo();
+    	m.setSong(tokens[0]);
+    	m.setAlbum(tokens[1]);
+    	m.setSinger(tokens[2]);
+    	m.setDuration(Integer.parseInt(tokens[3]));
+    	return m;
+    }//end processString(...)
+/**
+*provides a handle to the populated MusicStore data structure that this class populated
+*@see MusicStore.java
+*/
+    public MusicStore getMusicStore()
+    {
+    	return ms;
+    }//end getMusicStore()
+
+} // end class PopulateWorker
+

@@ -1,0 +1,89 @@
+CS471
+Lab 6 due 4/23/2014
+Author: Casserly, Shawn
+Date: 4/23/2014
+
+
+Part 2 
+
+1. 	Hugs prints out 120 which is the answer to factorial of 5.
+	The infered type of factorial is "factorial :: Num a => a -> a"
+
+
+3.	factorial and fact2 give the same answer while fact1 gives a different answer. 
+	This is because the type of fact1 is Int and the type of fact2 is Integer so 
+	Int must store fewer digits than an Integer so Int must be overflowing while 
+	Integer is storing the correct value.
+
+
+4.	factorial (-2) gives a stack overflow since the expression is going to loop forever
+	the stack runs out of memory
+	factorial - 2 is literally subtracting 2 from factorial which doesnt mean anything so
+	an error is output
+
+
+6.	There are 5 definitions, factorial, fact1, fact2, factP, and factG
+	factG returns "error neg x" since we put a check for values less than 0
+
+
+7.	factorial 5.1 and factG 5.1 get a stack overflow since they will never become 0
+	factG2 is set to accept Integers so since 5.1 is a floating point it doesnt accept it
+	factE gives a stack overflow since there are no parentheses then the expression is 
+	evaluated as (factE n) - 1 instead of factE (n - 1)	
+
+
+Part 3
+
+1. 	Lab1> prodT(2,3,4)
+	24
+	Lab1> prodT(2,-3,4)
+	-24
+	Lab1> :t prodT
+	prodT :: Num a => (a,a,a) -> a
+
+
+2.	Lab1> :t prodC
+	prodC :: Num a => a -> a -> a -> a
+
+
+3.	Lab1> :t prodCx
+	prodCx :: Num a => a -> a -> a -> a
+	
+	They infer the same type but the code shows that the order of products 
+	being evaluated is different
+
+
+4.	It is legal and the types are:		
+	prodC1 :: Integer -> Integer -> Integer
+	prodC2 :: Integer -> Integer
+	prodC3 :: Integer
+	prodC12 :: Integer -> Integer
+	
+
+5.	Lab1> prodC 1 2 3
+	6
+	Lab1> prodC1 2 3
+	6
+	Lab1> prodC2 3
+	6
+	Lab1> prodC3
+	6
+	
+	None of these definitions are legal:
+	prodT1 = prodT 1
+	prodT2 = prodT(1)
+	prodT4 = prodT(1,2)
+	prodT3 = prodT(1,x,y)
+
+
+6.	Left associative:  F G H = ( F  G ) H
+
+
+7.	f(x) = x*5 + 3 = 5x+3
+	g(x) = (3*x - 1)*2 = (3x-1)*2 = 6x-2
+	
+	h(x) = f(g(x)) = 5(6x-2)+3 = 30x-7
+	h2(x) = g(f(x)) = 6(5x+3)-2 = 30x + 18
+
+	h(2) = 30(2) - 7 = 53
+	h2(2) = 30(2) + 18 = 78

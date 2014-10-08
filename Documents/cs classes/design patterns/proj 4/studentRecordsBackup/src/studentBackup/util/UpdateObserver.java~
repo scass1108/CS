@@ -1,0 +1,14 @@
+package studentBackup.util;
+
+class UpdateObserver extends Observer
+{
+	BST updatedTree;
+	public void update(BST updatedTree)
+	{
+		this.updatedTree = updateTree;
+	}
+	public BST getTree()
+	{
+		return this.updatedTree;
+	}
+}

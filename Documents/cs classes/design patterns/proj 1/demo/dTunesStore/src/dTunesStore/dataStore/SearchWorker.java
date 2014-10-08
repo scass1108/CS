@@ -1,0 +1,137 @@
+package dTunesStore.dataStore;
+
+import dTunesStore.util.Debug;
+import dTunesStore.util.Results;
+import java.util.Vector;
+import java.lang.Thread;
+import java.lang.InterruptedException;
+/** 
+*this method uses multiple threads to check if an entry in a data file 
+*matches the data stored in a data structure that was populated by 
+*another file and stores the result in another class' data structure
+*
+*/
+public class SearchWorker implements Runnable {
+
+    int threadsToMake;
+    MusicStore ms = new MusicStore();
+    FileReaderHelper frh;
+    Results r = new Results();
+/**
+*this is the constructor that is used to create the initial object in 
+*the driver class it contains the number of threads that are going to
+*be created in this class as well as a reference to a helper class to 
+*read from a file that i made as well as a reference to the results 
+*class that will store if an entry matches from the data structure 
+*and thefile this class reads from 
+*@param  threadsToMake   the number of threads this class will make
+*@param  frh a file helper that opens the file this class reads from
+*@param  r  instance of results that stores found MusicInfo objs
+*/
+    public SearchWorker(int threadsToMake, MusicStore ms, FileReaderHelper frh, Results r) {
+		this.threadsToMake = threadsToMake;
+		this.ms = ms;
+		this.frh = frh;
+		this.r = r;
+		if(Debug.getDebug() == 4){
+			System.out.println("SearchWorker constructor called");
+		}
+    }
+/**
+*this is the constructor that is called when i make the threads in this
+*class it contains the MusicStore class reference from the original 
+*instance of this class as well as the reference to the helper class 
+*for reading the file the data is being taken in from 
+*@param  ms    an instance of the MusicStore class shared among threads
+*@param  frh   a file helper where all threads read from the same file
+*@param  r     an instance of the Results class shared among threads
+*/    
+    
+    public SearchWorker(MusicStore ms, FileReaderHelper frh, Results r)
+    {
+    	this.ms = ms;
+    	this.frh = frh;
+    	this.r = r;
+		if(Debug.getDebug() == 4){
+			System.out.println("SearchWorker constructor called");
+		}
+    }
+
+/**
+*this method creates the threads that will be populating the data 
+*structure we created to hold the music information from the file. 
+*It calls the second constructor and creates the threads based on 
+*the value passed in from the first constructor
+*/    
+    public void startThreads()
+    {
+    	Thread t = null;
+    	SearchWorker sw;
+    	for(int i = 0; i < this.threadsToMake; i++)
+    	{
+    		sw = new SearchWorker(this.ms, this.frh, this.r);
+    		t = new Thread(sw);
+    		t.start();
+    	}
+    	for(int i = 0; i < this.threadsToMake; i++)
+		{
+			try
+			{
+				t.join();
+			}
+			catch(InterruptedException ie)
+			{
+				System.out.println("things went wrong");
+				System.exit(1);
+			}
+    	}
+    }
+
+/**
+*the threads read a line from the file and pass it into the 
+*searchForMatch method which is synchronized, to check if there is 
+*a match between the file's entry and the data in the 
+*MusicStore's data structure
+*@see MusicStore
+*/    
+    public void run() {
+		String s;
+		if(Debug.getDebug() == 3){
+			System.out.println("Searchworker run method was called");
+		}    		
+
+		while((s = frh.read()) != null)
+		{
+			searchForMatch(ms, s);
+		}
+    }
+
+/**
+*method checks if the MusicStore has an entry that matches lines in threads 
+*took in, method is synchronized since it will be accessed by multiple threads
+*@param ms MusicStore object that has already been populated in PopulateWorker class
+*@param s  String taken from the data file being read from by this class
+*@see MusicStore
+*/      
+    public synchronized void searchForMatch(MusicStore ms, String s)
+    {
+    	MusicInfo mi = new MusicInfo();
+    	//System.out.println("string to search " + s);
+    	if(ms.getMusicInfo(s) != null)
+    	{
+    		//System.out.println("match found, key = " + s);
+    		r.addResult(ms.getMusicInfo(s));
+    	}
+    }
+/**
+*method for getting the Results class' data that has been populated by 
+*this class's threads
+*@return instance of the class that has it's data structures populated
+*@see Results.java
+*/    
+    
+    public Results getResults()
+    {
+    	return r;
+    }
+} 

@@ -1,0 +1,37 @@
+WHATS LEFT ~~~~~~~~~~~~~
+`````````````````````````````````````````````
+Debug stuff -S
+	I changed debug so that it is an argument in the build.xml file
+	need to add two more? when debug is 3 it does nothing, 4 too
+	-Matt
+
+Proposed debug stuff:
+debug:
+good	0) Nothing
+good	1) Regular stdout
+good	2) Constructors
+good	3) Everytime value is added to the studentOrientation object (ScheduleEngineer.java)
+4) ??
+`````````````````````````````````````````````
+```````````````````````````
+done		toString stuff -S
+	Every class needs a toString unless there is a good reason not to. For example all the activities just print 	out their effort/cost/time 	values. This should be copy/paste after you make one.
+	```````````````````````````
+	`````````````````
+comment your own stuff -S
+`````````````````
+done	ANT Javadocs -S
+```````````
+done 	README -S
+```````````
+
+~~~~~~~~~~~~~~~~~
+
+DONE~~~~~~~~~~~~
+merge all bookstore/tour stuff -S
+
+Comment your own stuff -M
+testing -M
+ANT cleaning up backup files/ creating tarball -M
+
+~~~~~~~~~~~~~~~~~

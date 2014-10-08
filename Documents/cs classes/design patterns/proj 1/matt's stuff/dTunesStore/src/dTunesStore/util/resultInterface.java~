@@ -1,0 +1,10 @@
+package dTunesStore.util;
+
+import dTunesStore.dataStore.MusicInfo;
+
+public interface resultInterface{
+	//Method for adding results
+	void addResult(MusicInfo obj);
+	void printResults();
+
+}

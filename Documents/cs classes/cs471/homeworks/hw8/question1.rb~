@@ -1,0 +1,11 @@
+#!/usr/bin/ruby
+
+list = [ ]
+sum = 0
+0.upto(5){
+	|n| sum = sum + n
+	list[n] = sum
+}
+print list
+print "\n"
+

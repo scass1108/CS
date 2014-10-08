@@ -1,0 +1,11 @@
+all: ftpserv ftpcli
+
+ftpserv: server.o
+	g++ server.cpp -o ftpserv
+
+ftpcli: client.o
+	g++ client.cpp -o ftpcli
+
+clean:
+	rm -f *.o ftpserv ftpcli
+	

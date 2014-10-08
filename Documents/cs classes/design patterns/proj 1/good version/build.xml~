@@ -1,0 +1,63 @@
+
+<project name="dTunesStore" default="compile" basedir=".">
+
+  <property name="build.compiler"              value="modern"/>
+  <property name="src"                  value="src"/>
+  <property name="BUILD"                value="build"/>
+  <property name="classes"              value="${BUILD}/classes"/>
+
+
+  <target name="compile"
+          depends="dTunesStore"/>
+
+  <target name="clean">
+       <delete dir="${BUILD}"/>
+  </target>
+
+  <!-- Prepare target directories -->
+  <target name="prepare">
+        <mkdir dir="${BUILD}"/>
+        <mkdir dir="${classes}"/>
+  </target>
+
+
+  <!-- ** means all subdirectories as well -->
+  <!-- * means all files in the current directory -->
+  <!-- for just java files use *.java -->
+
+  <target name="dTunesStore" depends="prepare">
+    <javac srcdir="${src}"
+    	   includeantruntime = "false"
+           includes="dTunesStore/**"
+           excludes="**/package.html"
+           destdir="${classes}"
+           classpath="${classes}"
+           debug="on"
+           optimize="on"
+           deprecation="off"/>
+  </target>
+
+ <target name="jar">
+        <mkdir dir="${BUILD}/jar"/>
+        <jar destfile="${BUILD}/jar/dTunesStore.jar" basedir="${BUILD}/classes">
+            <manifest>
+                <attribute name="Main-Class" value="dTunesStore.driver.Driver"/>
+            </manifest>
+        </jar>
+    </target>
+
+
+<target name="run" depends="jar">
+        <java jar="${BUILD}/jar/dTunesStore.jar"  fork="true">
+	  <arg value="musicFileName"/>
+          <arg value="4"/>
+	  <arg value="searchFileName"/>
+          <arg value="4"/>
+          <arg value="5"/>
+
+	 </java>
+	
+    </target>
+
+
+</project>

@@ -1,0 +1,97 @@
+Sample questions from previous exams:
+
+1) What is the result of the following queries? Show the instance value of each variable after a successful query.
+
+?- W = x * 5, What = W * 2.
+
+	W = x*5,
+	What = x*5*2.
+
+
+?- f(B) = A, B = f(C), C = g(f(wow)).
+
+	B = f(g(f(wow))),
+	A = f(f(g(f(wow)))),
+	C = g(f(wow)).
+
+
+
+
+?- A = '+', B =.. [ A, 4, 7 ], R = B, S is R.
+
+
+	A = (+),
+	B = R, R = 4+7,
+	S = 11.
+
+
+
+
+?- A = [ x, y ], [A] = B, C = [ A | B].
+
+	A = [x, y],
+	B = [[x, y]],
+	C = [[x, y], [x, y]].
+
+
+
+
+
+?- dl( L - M, M - N, L - N ) = dl( [ x | A ] - [ x | B ], [ x, y | C ] - [ y | D ], E - F ).
+
+	L = [x|A],
+	M = [x, y|C],
+	N = [y|D],
+	B = [y|C],
+	E = [x|A],
+	F = [y|D].
+
+
+
+
+2) What would be a descriptive predicate name for the following clause:
+
+mys3( X , [ X | Tail ] ). ?
+
+
+
+Make sure you understand
+
+   a) append/3
+   
+   
+
+   b) using difference list to define append
+   
+   
+   
+
+   c) length/2
+   
+   
+   
+
+   d) member/2
+   
+   
+   
+
+
+
+There will be at least one prolog problem using "trees"
+
+Definitions/teams used in prolog like -- atom, horn clauses, unification etc.
+
+The relationship between CFGs and programming languages --
+
+like problems given for homework and lab.  
+
+
+
+
+Make sure you understand pre and post fix notation.
+
+prefix: + A B
+postfix: A B + 
+infix: A + B
+

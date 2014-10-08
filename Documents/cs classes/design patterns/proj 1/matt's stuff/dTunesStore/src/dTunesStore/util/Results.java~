@@ -1,0 +1,13 @@
+
+package dTunesStore.util;
+
+import java.util.Vector;
+import dTunesStore.dataStore.MusicInfo;
+public class Results implements resultInterface {
+	Vector<MusicInfo> resultVector = new Vector<MusicInfo>();
+
+	public void addResult(MusicInfo Obj){
+		resultVector.add(Obj);
+		//System.out.println(resultVector.get(0).songName);
+	}
+}

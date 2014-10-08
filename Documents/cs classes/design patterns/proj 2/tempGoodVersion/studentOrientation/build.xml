@@ -1,0 +1,69 @@
+<project name="studentOrientation" default="compile" basedir=".">
+
+  <property name="build.compiler"              value="modern"/>
+  <property name="src"                  value="src"/>
+  <property name="BUILD"                value="build"/>
+  <property name="classes"              value="${BUILD}/classes"/>
+
+
+  <target name="compile"
+          depends="studentOrientation"/>
+
+  <target name="clean">
+       <delete dir="${BUILD}"/>
+	   <delete>
+		<fileset dir="." includes ="**/*~" defaultexcludes="no"/>
+	   </delete>
+  </target>
+
+  <!-- Prepare target directories -->
+  <target name="prepare">
+        <mkdir dir="${BUILD}"/>
+        <mkdir dir="${classes}"/>
+  </target>
+
+
+  <!-- ** means all subdirectories as well -->
+  <!-- * means all files in the current directory -->
+  <!-- for just java files use *.java -->
+
+  <target name="studentOrientation" depends="prepare">
+    <javac srcdir="${src}"
+    	   includeantruntime = "false"
+           includes="studentOrientation/**"
+           excludes="**/package.html"
+           destdir="${classes}"
+           classpath="${classes}"
+           debug="on"
+           optimize="on"
+           deprecation="off"/>
+  </target>
+
+ <target name="jar">
+        <mkdir dir="${BUILD}/jar"/>
+        <jar destfile="${BUILD}/jar/studentOrientation.jar" basedir="${BUILD}/classes">
+            <manifest>
+                <attribute name="Main-Class" value="studentOrientation.driver.Driver"/>
+            </manifest>
+        </jar>
+    </target>
+
+
+<target name="run" depends="jar">
+        <java jar="${BUILD}/jar/studentOrientation.jar"  fork="true">
+          <arg value="1"/>
+	 </java>
+    </target>
+
+<target name="archive" >
+    <mkdir dir="${BUILD}/dist"/>   
+    <tar destfile="${BUILD}/dist/Cheung_Matthew_assign2.tar" basedir="${src}"/>
+    <gzip src="${BUILD}/dist/Cheung_Matthew_assign2.tar" destfile="${BUILD}/dist/Cheung_Matthew_assign2.tar.gz"/> 
+</target>
+
+  <!-- Generate javadocs for current project into ${doc.dir} -->
+  <target name="doc" depends="jar">
+    <javadoc sourcepath="${src}" destdir="javadocs"/>
+  </target>
+
+</project>

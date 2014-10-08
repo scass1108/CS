@@ -1,0 +1,6 @@
+package studentBackup.util;
+import studentBackup.util.Visitor;
+interface Acceptor
+{
+	public void accept(Visitor v);
+}

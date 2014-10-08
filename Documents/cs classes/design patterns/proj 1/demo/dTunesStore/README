@@ -1,0 +1,99 @@
+
+ant clean removes the .class and .java files
+ant compile translates Java code to Java bytecode
+ant run used Java interpreter to run the compiled Java bytecode that was compiled
+
+CS442 Design Patterns
+Fall 2013
+Assignment <Assignment 1> README FILE
+
+Due Date:  Sunday, September 29th, 2013
+Submission Date: Sunday, September 29th, 2013
+Grace Period Used This Project: 0
+Grace Period Remaining: 0
+Author(s): Matthew Cheung, Shawn Casserly
+e-mail(s): mcheung1@binghamton.edu, scasser1@binghamton.edu
+
+
+PURPOSE:
+
+[
+  The purpose of this project was to implement Design Patterns when writing
+  a program to emulate a Music Store. There were several decisions to be made:
+  
+  1.MusicStore.java- The datastructure we chose was a Hash Table
+  that took an ArrayList of values as the values, and we used the 3 attributes individually
+  each as a key. While this creates redundant data, we sacrifice space for speed when searching
+  this data structure later. This is by design, it would create a better customer experience
+  if their searches are faster, while the producer should worry about storage space. Also a 
+  Hash table was used over a hash map because it is synchronized and we needed thread safety
+  to execute populate and search later on.
+
+  2.Results.java- The data structure in this file that we chose was Vector. We once again needed
+  a synchronized data structure for thread safety since multiple threads could be trying to write to
+  it at the same time. Also look up time was not an issue here, so the sacrifice of space like in MusicStore
+  was not necessary.
+]
+
+PERCENT COMPLETE:
+
+[
+	I believe this project is 100% complete.
+]
+
+PARTS THAT ARE NOT COMPLETE:
+
+[
+ 	N/A
+]
+
+BUGS:
+
+[
+	None
+]
+
+FILES:
+
+[
+ FileReaderHelper.java - Used to take care of file reading for PopulateWorker
+ MusicInfo.java- used to create MusicInfo objects
+ MusicStore.java- used to create data structure to hold MusicInfo objects
+ PopulateWorker.java- used to create threads to populate MusicStore
+ SearchWorker.java- used to create threads to search MusicStore/store in Results
+ Debug.java- class that holds the debug value
+ populatefile.cpp - used to automate creation of musicinfo.txt
+ resultsInterface.java- interface for Results.java
+ Results.java- used to create datastructure to hold search results 
+]
+
+SAMPLE OUTPUT:
+
+[
+	Depends on Debug value
+]
+
+TO COMPILE:
+
+[
+  ant compile
+]
+
+TO RUN:
+
+[
+  ant run
+]
+
+EXTRA CREDIT:
+
+[
+  N/A
+]
+
+ACKNOWLEDGEMENT:
+
+[
+ N/A
+]
+

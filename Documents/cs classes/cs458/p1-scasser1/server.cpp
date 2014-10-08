@@ -1,0 +1,73 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <iostream>
+#include <netdb.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <strings.h>
+#include <unistd.h>
+
+using namespace std;
+//server = 1 arg, portnum
+int main(int argc, char* argv[]) 
+{
+        int   fd, fd2;
+        unsigned int clilen;
+        struct sockaddr_in servaddr;
+        char command[150];
+
+	/* Create a TCP socket */
+        fd = socket(AF_INET, SOCK_STREAM, 0);
+
+	/* Initialize server's address and well-known port */
+        servaddr.sin_family      = AF_INET;
+        servaddr.sin_addr.s_addr = INADDR_ANY;
+        servaddr.sin_port        = htons(atoi(argv[1]));
+ 
+        /* Bind servers address and port to the socket */
+        bind(fd, (struct sockaddr *) &servaddr, sizeof(servaddr));  
+            
+	/* Convert socket to a listening socket max 100 pending clients*/
+   	listen(fd, 10);
+//cout << "listening" << endl;  
+ 	
+
+   	while(1)
+   	{
+   		/* Wait for client connections and accept them */
+		clilen = sizeof(servaddr);
+		fd2 = accept(fd, (struct sockaddr *) &servaddr, &clilen);
+	
+//cout << "connected" << endl;
+   	
+		//recieve commands from client
+
+		int readval = 0;
+		
+		readval = read(fd2, command, strlen(command));
+		string line = command;
+		if(line.length() > 0)
+		{
+	//	cout << "val from read is: " << readval << endl;
+	//	cout << "line recieved is: " << line << endl;
+			if(line.substr(0,3) == "lcd")
+			{	
+				//cout << "using chdir" << endl;
+				string line2 = line.substr(4, line.length());
+	//cout << "using cmd: " << line2 << endl;
+				chdir(line2.c_str());
+			}
+			else
+			{
+				//cout << "using system()" << endl;
+				string line3 = line.substr(1, line.length());
+	//cout << "using cmd: " << line3 << endl;			
+				system(line3.c_str());
+			}
+		}
+	}
+}

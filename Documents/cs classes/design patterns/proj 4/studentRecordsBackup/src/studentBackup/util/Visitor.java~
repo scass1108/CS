@@ -1,0 +1,6 @@
+package studentBackup.util;
+public interface Visitor
+{
+	public void visit(BST bst);
+}
+	

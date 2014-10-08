@@ -1,0 +1,261 @@
+Shawn Casserly
+5/8/14
+LAB 8
+CS 471
+
+> module LabH3S14
+>    where
+
+You should remove most of the comments when you submit you solutions.  
+Your solution should be about a page.
+
+Problem 1:
+In homework due this morning you defined a function composeList which 
+composes a list of functions into a single function.
+ 
+    ...> composeList [ (*) 2, (*) 2] 2
+    
+Redo this problem using hof. The definition should use a 'fold' and it 
+   should be only be one line AND no explicit arguments (i.e. complete
+   composeHOF = ?????).
+#
+#
+
+> composeHOF = (\list -> foldl1 (.) list)       
+
+#
+#
+
+Problem 2: (from http://en.wikipedia.org/wiki/Thue%E2%80%93Morse_sequence )
+"In mathematics, the Thue-Morse sequence, or Prouhet-Thue-Morse sequence, is a 
+binary sequence that begins:
+
+  0 01 0110 01101001 0110100110010110 01101001100101101001011001101001 ...
+
+(if your sequence starts with one..)
+    1 10 1001 10010110 1001011001101001...."
+
+...
+"Characterization using bitwise negation
+
+The Thue-Morse sequence in the form given above, as a sequence of bits, 
+can be defined recursively using the operation of bitwise negation. So, the 
+first element is 0. Then once the first 2n elements have been specified, 
+forming a string s, then the next 2n elements must form the bitwise negation of 
+s. Now we have defined the first 2n+1 elements, and we recurse.
+
+Spelling out the first few steps in detail:
+
+    * We start with 0.
+    * The bitwise negation of 0 is 1.
+    * Combining these, the first 2 elements are 01.
+    * The bitwise negation of 01 is 10.
+    * Combining these, the first 4 elements are 0110.
+    * The bitwise negation of 0110 is 1001.
+    * Combining these, the first 8 elements are 01101001.
+    * And so on.
+So
+    * T0 = 0.
+    * T1 = 01."
+
+Define a primitive recursive function 'thue' given the nth thue sequence returns
+the next thue sequence. Then once the first 2**n elements have been specified, 
+forming a string s, then the next 2**n elements must form the bitwise negation 
+of s. Now we have defined the first 2**(n+1) elements, and we recurse.  
+
+For the purpose of this program we will represent these string 
+as a list of 0s and 1s.
+
+e.g.
+   ...> thue [0,1,1,0]
+   [0,1,1,0,1,0,0,1]
+
+#
+#
+
+> thuer [] = []
+> thuer (0:list) = 1 : thuer list
+> thuer (1:list) = 0 : thuer list
+> thue list = list ++ (thuer list)
+
+#
+#
+
+
+
+Problem 3: Above you wrote a function. thue, to create the next "thue element".
+  a) Redefine thue using 'map' instead of primitive recursion. My solution 
+     was coded using (++), map, lambda expression and mod.  Call this
+     function 'thueMap'. (one line of code)
+  b) Define thueSeq which is a sequence of "thue elements" using the circular
+     list illustrated in class for fibseq
+      (http://bingweb.binghamton.edu/~head/CS471/NOTES/HASKELL/4hF02.html)
+       -- Call this function 'thueMapSeq'.  You may use thue OR thueMap in your
+       definition of thueMap. (one line of code)
+ 
+      ....> thueMap [0,1,1,0,1,0,0,1]
+      [0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0]
+
+#
+#
+
+> thueMap list = list ++ map (\i -> if i == 1 then 0 else 1) list
+
+#
+#
+      ....> take 4 thueMapSeq 
+      [[0],[0,1],[0,1,1,0],[0,1,1,0,1,0,0,1]]
+
+#
+#
+
+> thueMapSeq = [0]: [list ++ map (\i -> if i == 1 then 0 else 1) list | list <- thueMapSeq]
+
+#
+#
+
+Problem 4.
+Using an  HOF (map, fold and/or filter) define flattenT that returns a list of
+value in each tuple.  
+
+4a) not too bad
+    The output should be in the same order as the values appear in the 
+     original list. (one line of code if you use a lambda expression)
+e.g.
+
+   ...> flattenT  [(1,2), (3,4), (11,21),(-5,45)] 
+   [1,2,3,4,11,21,-5,45]
+
+#
+#
+
+ flattenT = 
+
+#
+#
+
+
+
+
+4b) not too bad.. 
+   flattenR is the same as 10a, however, the values appear in the reverse order
+   from the original list. (one line of code if you use a lambda expression)
+e.g.
+   ...> flattenR  [(1,2), (3,4), (11,21),(-5,45)] 
+   [45,-5,21,11,4,3,2,1]
+
+   
+
+Problem 5:
+Using a fold in your solution:
+
+a) Define  "allTrue" to evaluate a list of expression of Bools to True if all 
+   the expression in a list are true.  Provide two test cases.  Do not have an
+   explicit parameters.  (i.e. allTrue = ???)
+
+
+
+b)  define "noneTrue"  which evaluates to True if none of the boolean 
+    expression in a list are true. Provide two test cases. Do not have an
+    explicit argument.  (i.e. noneTrue = ???) (Hint: You should use compose to 
+    "glue" some of the functions so you don't need explicit parameters.)
+    
+
+
+
+Problem 6: Write new definitions of this function:
+
+# f = \xs -> [ x *2 - 3 | x <- xs, x > -1 ]
+  
+   ...> f [1,20,-3,15,2]
+   [1,20,-3,15,2]
+
+
+   Using explicit recursion and pattern-matching, without guards-- OR --
+   using explicit recursion with guards but without pattern-matching.  You
+   may use explicit arguments. (one line of code if you use a lambda expression)
+   
+
+
+
+Problem 7: (Thompson 10.13)
+  Find functions f1 and f2 so that
+ 
+   s8 =  map f1 . filter f2
+
+  has the same effect as
+ 
+
+> p8 = filter (>0) . map (+1)
+
+ 
+  ....> p8 [-4,4, -3,3,12,-12]
+  [5,4,13]
+  (99 reductions, 153 cells)
+  ....> s8 [-4,4, -3,3,12,-12]
+  [5,4,13]
+  (90 reductions, 137 cells)
+
+#
+#
+
+> s8 = map f1 . filter f2
+> f1 = (+1)
+> f2 = (>(-1))
+
+#
+#
+
+Problem 8. 
+Using higher order functions (map, fold or filter) and if necessary lambda
+expressions. Write a definition for f1 and f2 so the following evaluation 
+is valid:  (hint: a lambda expressions could be useful).
+
+     f1 (f2 (*) [1,2,3,4]) 5  ~> [5,10,15,20]
+
+     Main> f1 ( f2 (*) [1,2,3,4]) 5
+     [5,10,15,20]
+     (77 reductions, 123 cells)
+
+
+
+
+Problem 9:  Define 'prodLtoR nums', that given a non empty list of Nums, nums,  
+      the result  is a list of the prod of the numbers in nums  such that last
+      value in the output is the product of all the number nums, the next to
+      last value in the output is the product of all the numbers in nums 
+      except the last value in nums, etc.  
+      
+   A) Use explicit recursion.
+      You may assume the input contains at least one value.  i.e. 
+            
+    ...> prodLtoR [3,4,1,2,3]
+    [3,12,12,24,72]
+    
+   B)Redo the above by filling in the blanks below.
+   
+#     > prodLtoRHOF  = (.) reverse (foldl op [] )
+#     >  where
+#     >   op  [] y = ______________
+#     >   op  (x:xs) y = ___________
+
+
+
+
+
+Problem 10:  (Thompson 17.23 )
+Define the list of numbers whose only prime factors are 2, 3, and 5, the
+so-called Hamming numbers:
+
+
+#   ...> take 15 hamming
+   [1,2,3,4,5,6,8,9,10,12,15,16,18,20,24]
+
+
+ You may consider using any combinition of the following techiques
+       to express your solution  list comprehension notation, 
+       and/or explicit recursion, and/or local definitions .  
+       (You may find it helpful to define a "merge")
+              
+              
+ 

@@ -1,0 +1,212 @@
+CS471 - Programming Language
+Section: 01
+Assignment #8 due: 3/26/2014
+Author: Casserly, Shawn
+Date: 3/26/2014
+
+references: github.com/dannyyu92/cs471 for treemodule ruby and python
+
+
+
+1. In Ruby everything is an object including numbers and nil.  Ruby does not use "for" loops much but instead uses iterables and code blocks.  Below is a script to print out the product of the first 5 numbers:
+
+        sum = 1
+        1.upto(5){|n| sum = sum + n}
+        puts prod
+Below is a script build a list of numbers from 1 to 5 and print out the list:
+        lst = [ ]
+        1.upto(5){|n| lst[n]=n}
+        print lst
+        print "\n"
+        puts lst 
+Write a script using a number object 1 to build a list where each element is the sum of 1 to 5.  The if you create a list lstSum the output should be
+ irb(main):021:0> lstSum
+=> [0, 1, 3, 6, 10, 15] 
+     
+Tip: If you see the following error:
+           TypeError: nil can't be coerced into Fixnum
+Your variable has not been initialized.
+     
+     
+     
+	see question1.rb     
+     
+     
+     
+     
+      
+2.    Variation of  exercises 6.15 and 6.16.  Add two iterator methods to the Tree class in TreeModule.py. preorder() is an iterator that traverses the tree object in preorder and postorder() is an iterator that traverses the tree object in postorder. 
+
+
+
+
+
+	see TreeModule.py
+
+
+
+
+
+3.    Repeat problem 2 using Ruby. Add two iterator methods to the Tree class in treeModule.rb. preorder() is an iterator that traverses the tree object in preorder and postorder() is an iterator that traverses the tree object in postorder. 
+
+
+
+
+
+	see treeModule.rb
+
+
+
+
+4.    Python 3 has two built-in sequence types: tuple , immutable sequence and list,  mutable sequence.  The language provides for  loop to iterate through items in any sequence.  The script below prints out the each item in lst with it's sequence number.
+
+        i = 0
+        for item in lst :
+            i = i+1
+            print (repr(i) + " " + repr(item))
+
+a.        Briefly explain the results of the following statements:
+            seq = [1,2] + [1,2]
+            
+            	returns [1,2,1,2]
+            	Python makes a new list(seq) that has a copy of the items in the first list followed 
+            	by a copy of the items in the second list            
+            
+            
+            seq = (1,2) + (1,2)
+            
+            
+            	returns (1,2,1,2)
+            	Python makes a new tuple and that has a copy of the items in the first tuple 
+            	followed by a copy of the items in the second tuple 
+            
+            
+            
+            seq = [1,2] + (1,2)
+            
+            	returns error
+            	you cant concatenate a tuple to a list since the '+' operator isnt defined to work on list + tuple
+            
+            
+            
+b.        Drawn a memory diagram of the following after each statement is executed:
+            A = [1,(3,5),[7,9]]
+            B = [10, A, 30]
+            A[1] = 66
+            
+
+          skipped
+          
+            
+c.        Write a generator, called 'gen',that generates the following sequence: 'a',4,(1,2).
+
+
+
+d.        Will the script (above 'a') work if sequence is a list?  Will this script work if sequence is a tuple?  If it work for both data types without modification briefly explain why.  If it doesn't work modify the code so it work for both tuples and lists.  Will this script work with 'gen' defined in part c?
+
+
+
+e.        Write a for loop which computes the "sum" (+) of items in an order sequence data type and print the result.  Will your code work if your sequence contains only "string" items? Will your code work if you sequence contains only lists?
+
+5.    Here are some type and variable declarations in C syntax:
+
+            typedef  struct {
+               char* pt;
+               int a;
+            } RecA;
+
+
+            typedef struct {
+               char* pt;
+               int a;
+            } RecB;
+
+            typedef RecA RecC;
+
+            RecA w;
+            RecB x, y;
+            RecC z;
+
+        State which variables are type equivalent under (a) structural equivalence, (b) strict name equivalence, and (c) the actual C equivalence algorithm.
+
+	    a. w,x,y,z are equal under structural equivalence
+	    b. w,y are equal under strict name equivalence
+	    c. w,z are equal under the actual C algorithm
+
+6.    page 376 exercise 7.15 (Include any assumptions)
+
+
+assumtions:
+	size of int is 4 bytes
+	size of char is 1 byte
+	
+	A[3][7] is row 3 column 7
+
+explanation	
+	size of struct is 5 bytes total
+	3 rows of 10 * 5 bytes = 150 bytes + 8*5 bytes for current row = 190 bytes, 8 slots since array goes from 0-9 indexing
+	
+	32bit machine = 4 bytes / address
+	
+	190/4 = 47.5
+	
+	orginal address was in decimal so 1000 + 47 = 1047
+
+
+
+7.    C++/C questions ("Thinking in C++" is a good reference)::
+a.        In C++, what is the difference between assigning a value to a pointer and to a reference?
+        
+        
+            A reference is an alias while a pointer actually points to a value in memory, and references cant be made to point to other objects
+        
+        
+b.        In C++, what is the difference between  taking the address (via operator &)  of a pointer and a reference?
+        
+        
+            The address of a reference is the address of the aliased object, the address of a pointer is the address a pointer is stored in
+        
+        
+c.        What is void * ? Why have it? void * is not exactly the same in C and C++. Provide an example that will illustrate the difference between C and C++. 
+        
+        
+            A void* pointer is a pointer to a memory location where the type is not defined. The point of a void* pointer is so 
+            that any pointer val can be converted to void* and back to its original type without loss of information. 
+            In C pointer conversion to and from void* is implicit but in C++ conversion from void* to another type needs a cast.
+            
+            int* a = new int;
+            void* b = a;
+            a = b;
+            
+            this code will work in C but in C++ it wont work because you're assigning a void* to an int*
+        
+        
+        
+        
+d.        Suppose we tried to write a C procedure what initialize an array to a certain size as follows:
+
+               void init(int a[], int size) {
+                   a = (int*) malloc(size*sizeof(int));
+               }
+
+        Will this compile? What if anything, is wrong with with ? Explain.
+        
+            yes it will compile, the compiler will read int a[] as a pointer, not as an array since you cant pass an array 
+            as an argument in C, it will treat it as a pointer and give a warning.
+        
+        
+
+8.Suppose we wrote the following try block in C++;
+      try {
+           // do something
+      }
+      catch (...) {cout << "general error!";}
+      catch (range_error) {cout << "range error!";}
+
+What is wrong with this code?
+
+
+	The general catch has to be the last catch statement written or it will be executed even if
+	there is a range error, the compiler may also give an error about this
+
+
